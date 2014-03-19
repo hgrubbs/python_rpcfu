@@ -1,4 +1,4 @@
-from rpc_controllers import tests, status
+from rpc_controllers import tests
 
 class InsufficientArguments(Exception):
     """Exception for insufficent arguments passed from web client to RPC"""
@@ -24,8 +24,6 @@ class RPCMapper(object):
         # Calls individual functions from within defined modules
         if rpcfu_module == "tests":
             rpcfu_module = tests
-        elif rpcfu_module == "status":
-            rpcfu_module = status
         elif rpcfu_module is None:  # Module to receive calls when no module is specified
             rpcfu_module = status
 

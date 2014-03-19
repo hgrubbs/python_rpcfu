@@ -1,2 +1,2 @@
-def greeter():
+def greeter(**request):
     return {"hello":"world"}

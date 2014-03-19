@@ -26,4 +26,6 @@ You should receive this response from your browser:
 
     {"greeting": "Hello Developer!"}
 
+Want some more data about the request and the host? Try changing the name of the controller in the URL from _tests_ to _\_debug\__tests_, you'll see the environ dumped in the JSON output. This is useful for debugging, but should be disabled in production to avoid giving unnecessary information to clients.
+
 Documentation is (almost) entirely unwritten at this time, but that should be remedied in the near future.

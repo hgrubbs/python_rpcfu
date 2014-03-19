@@ -1,7 +1,7 @@
 # "RPCFU", a WSGI compliant application, developed with RPC in mind
 
 #############################################################################
-#   Copyright 2012-2014 Hunter Grubbs <hunter.grubbs@gmail.com>
+#   Copyright 2012-2014 Hunter Grubbs <hgrubbs@grubbslab.org>
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.

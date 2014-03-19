@@ -28,4 +28,10 @@ You should receive this response from your browser:
 
 Want some more data about the request and the host? Try changing the name of the controller in the URL from _tests_ to _\_debug_tests_, you'll see the environ dumped in the JSON output. This is useful for debugging, but should be disabled in production to avoid giving unnecessary information to clients.
 
-Documentation is (almost) entirely unwritten at this time, but that should be remedied in the near future.
+Need more documentation?
+------------------------
+Documentation is (almost) entirely unwritten at this time, but that should be remedied in the near future. If you are interested in helping document the usage of RPCfu, please become a collaborator! Currently, there are a handful of enterprise commercial deployments of RPCfu that extend and take it in wonderful directions. Unfortunately, these deployments are unable to commit their extensions upstream as they contain confidential information about the business. Hopefully these users will sanitize their confidential data and allow these extensions to be shared with the world, but until then feel free to contribute any extensions or improvements you may make.
+
+Use the source Luke!
+--------------------
+Where documentation may be slim, code comments are not. Code is well commented, and all PEP 8 compliant. Feel free to dive into the (not-so-vast) source code, it's not too terrifying :)

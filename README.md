@@ -16,7 +16,7 @@ You should receive this response from your browser:
 
     {"greeting": "Hello world!"}
 
-Now let's try the somewhat more complex call that takes an input. Visit the URL [http://localhost:8080/tests/personalized_greeter?name=Developer](http://localhost:8080/tests/personalized_greeter?name=Developer).
+Now let's try a call that takes an input. Visit the URL [http://localhost:8080/tests/personalized_greeter?name=Developer](http://localhost:8080/tests/personalized_greeter?name=Developer).
 
 You should receive this response from your browser:
 

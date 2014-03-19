@@ -1,12 +1,14 @@
 from rpc_controllers import tests
 
+
 class InsufficientArguments(Exception):
     """Exception for insufficent arguments passed from web client to RPC"""
     def __init__(self, value):
         self.value = value
 
     def __str__(self):
-        return repr(self.value) 
+        return repr(self.value)
+
 
 class RPCMapper(object):
 
@@ -18,7 +20,7 @@ class RPCMapper(object):
             rpcfu_function = url
         else:  # catches urls like /foo/bar
             rpcfu_module = url[:url.find("/")]
-            rpcfu_function = url[url.find("/")+1:]
+            rpcfu_function = url[url.find("/") + 1:]
             pass
 
         # Calls individual functions from within defined modules

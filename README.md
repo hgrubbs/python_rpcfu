@@ -28,7 +28,7 @@ Want some more data about the request and the host? Try changing the name of the
 
 JSON outputs, what about inputs?
 --------------------------------
-You may supply all inputs via JSON as well, you can even mix and match them. The way to do this is to supply a query string variable named *json_args* containing your arguments. In the _Quick Start_ above, providing `?name=Developer` is the same as providing `{"name": "Developer"}` within the *json_args* variable. Passing arguments as separate query string variables is largely used in debugging, and seems messy to deploy in production.
+You may supply all inputs via JSON as well, you can even mix and match them. The way to do this is to supply a query string variable named *json_args* containing your arguments. In the _Quick Start_ above, providing `?name=Developer` is the same as providing `{"name": "Developer"}` within the *json_args* variable. Passing arguments as separate query string variables is available mainly for development/debugging, and seems sloppy to deploy in production.
 
 Mapping
 -------

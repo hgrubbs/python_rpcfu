@@ -1,4 +1,4 @@
-from rpc_controllers import tests, status, docstorage
+from rpc_controllers import tests, status
 
 class InsufficientArguments(Exception):
     """Exception for insufficent arguments passed from web client to RPC"""

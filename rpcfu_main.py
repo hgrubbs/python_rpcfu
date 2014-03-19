@@ -20,8 +20,7 @@
 def application(environ, start_response):
     import sys
     import datetime
-    #import json
-    import bson.json_util as json
+    import json
     from cgi import FieldStorage
     start_time = datetime.datetime.now()  # Grab start time early
 

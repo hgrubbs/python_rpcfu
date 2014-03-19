@@ -1,2 +1,5 @@
 def greeter(**request):
-    return {"hello":"world"}
+    return {"greeting":"Hello world!"}
+
+def personalized_greeter(name, **request):
+    return {"greeting": "Hello %s!" % name}

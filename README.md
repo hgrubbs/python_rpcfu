@@ -1,10 +1,23 @@
 RPCfu - what is it?
 -------------------
 
-RPCfu is a project to create a *very lightweight* WSGI-compliant RPC framework. The project is written in Python 3.x, and is the basis for a handful of commercial RPC platforms.
+RPCfu is a project to create a _very lightweight_ WSGI-compliant RPC framework. The project is written in Python 3.x, and is the basis for a handful of commercial RPC platforms.
 
 Mapping
 -------
-Mapping is accomplished in rpcfu_core/RPCMapper.py, and is easily modified for different mapping schemes. The simplest way to get started is to add a new function to the rpc_controllers/test.py module, then fire up the debug server and HTTP GET your new function.
+Mapping is accomplished in __rpcfu_core/RPCMapper.py__. An example mapping is included inside __rpc_controllers/test.py__.
+
+Quick start
+-----------
+Within __rpc_controllers/test.py__, there is are two simples functions named __greeter()__ and __personalized_greeter()__ defined. These demonstrate the way new calls are added to RPCfu. Start up __rpcfu_main.py__, then visit the URL _http://localhost:8080/tests/greeter.py_ to see the output of a simple call that takes no inputs.
+
+You should receive this response from your browser:
+    {"greeting": "Hello world!"}
+
+To try a slightly more complex call that takes an input, invoke the __personalized_greeter()__ by visiting the URL [http://localhost:8080/tests/personalized_greeter?name=Developer].
+
+You should receive this response from your browser:
+
+    {"greeting": "Hello Developer!"}
 
 Documentation is (almost) entirely unwritten at this time, but that should be remedied in the near future.

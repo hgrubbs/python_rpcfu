@@ -16,7 +16,7 @@ You should receive this response from your browser:
 
     {"greeting": "Hello world!"}
 
-Now let's try a call that takes an input. Visit the URL [http://localhost:8080/tests/personalized_greeter?name=Developer](http://localhost:8080/tests/personalized_greeter?name=Developer).
+Now let's try a call that takes an input. With __rpcfu_main.py__ running, visit the URL [http://localhost:8080/tests/personalized_greeter?name=Developer](http://localhost:8080/tests/personalized_greeter?name=Developer).
 
 You should receive this response from your browser:
 
@@ -25,6 +25,10 @@ You should receive this response from your browser:
 Simple enough? Both calls have access to the _**request_ dictionary, which contains the WSGI environ. This can be handy to get the client IP, or access multi-part fields sent along with a POST. The *personalized_greeter()*'s argument _name_ should be obvious as well. Positional arguments like _name_ can be added as you see fit, just make sure _**request_ is last in your function definition.
 
 Want some more data about the request and the host? Try changing the name of the controller in the URL from _tests_ to *_debug_tests*. You'll see the environ dumped in the JSON output. This is useful for debugging, but should be disabled in production to avoid giving unnecessary information to clients.
+
+Built-in debug server
+---------------------
+When invoked from the command line, __rpcfu_main.py__ creates a single threaded debug server that listens on port 8080 by default. This should not be used for production, but is handy for debugging. You can use the _pdb_ python debugging module to create breakpoints within your application, allowing you to debug in real time from the command line. The debug server is only created when invoked from the command line, and will not exist if called via WSGI.
 
 JSON output is fine, but what about inputs?
 --------------------------------

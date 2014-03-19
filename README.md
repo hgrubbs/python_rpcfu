@@ -32,7 +32,7 @@ You may supply all inputs via JSON as well, you can even mix and match them. The
 
 Mapping
 -------
-Mapping is accomplished in __rpcfu_core/RPCMapper.py__. An example mapping is included that points to __rpc_controllers/test.py__. The quickest introduction to how RPC calls are mapped is to follow the _Quick Start_ above.
+Mapping is accomplished in __rpcfu_core/RPCMapper.py__. An example mapping is included that points to __rpc_controllers/test.py__. The quickest introduction to how RPC calls are mapped is to take a peek inside __RPCMapper.py__ - it's short, concise, and very easy to add to.
 
 Need more documentation?
 ------------------------

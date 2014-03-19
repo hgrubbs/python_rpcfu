@@ -3,10 +3,6 @@ RPCfu - what is it?
 
 RPCfu is a project to create a _very lightweight_ WSGI-compliant RPC framework. The project is written in Python 3.x, and is the basis for a handful of commercial RPC platforms.
 
-Mapping
--------
-Mapping is accomplished in __rpcfu_core/RPCMapper.py__. An example mapping is included that points to __rpc_controllers/test.py__.
-
 Quick start
 -----------
 Within __rpc_controllers/test.py__, there is are two simple functions defined:
@@ -27,6 +23,10 @@ You should receive this response from your browser:
     {"greeting": "Hello Developer!"}
 
 Want some more data about the request and the host? Try changing the name of the controller in the URL from _tests_ to _\_debug_tests_, you'll see the environ dumped in the JSON output. This is useful for debugging, but should be disabled in production to avoid giving unnecessary information to clients.
+
+Mapping
+-------
+Mapping is accomplished in __rpcfu_core/RPCMapper.py__. An example mapping is included that points to __rpc_controllers/test.py__. The quickest introduction to how RPC calls are mapped is to follow the _Quick Start_ above.
 
 Need more documentation?
 ------------------------

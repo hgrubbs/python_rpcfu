@@ -44,7 +44,7 @@ def application(environ, start_response):
 
     rpc_name = environ['PATH_INFO'].replace('/', '', 1)  # Remove leading slash from url
 
-    # Ignore any favicon.ico requests from developers browsing while debugging
+    # Ignore any favicon.ico requests - these are a pest when using the debug server
     if rpc_name == "favicon.ico":
         status = '200 OK'
         msg = "favicon.ico REQUEST IGNORED"
@@ -58,7 +58,6 @@ def application(environ, start_response):
     else:
         send_debug = False
     if 'json_args' in http_args:  # Merge 'json_args' into http_args if present
-        #http_args['json_args'] = json.loads(http_args['json_args'].value)
         try:
             decoded_json = json.loads(http_args['json_args'])
         except ValueError:  # invalid JSON handed to us
@@ -89,7 +88,7 @@ def application(environ, start_response):
         start_response(return_status, response_headers)
         return [response_dict.encode('utf-8')]
 
-# Start debug_server, or set up path & environ for WSGI deployment if debug_server is False
+# Start debug_server if invoked directly, this is NOT run if loaded by WSGI
 if __name__ == "__main__":
     debug_server_bind = "0.0.0.0"
     debug_server_port = 8080

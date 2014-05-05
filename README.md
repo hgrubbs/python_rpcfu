@@ -22,7 +22,7 @@ You should receive this response from your browser:
 
     {"greeting": "Hello Developer!"}
 
-Simple enough? Both calls have access to the _**request_ dictionary, which contains the WSGI environ. This can be handy to get the client IP, or access multi-part fields sent along with a POST. The *personalized_greeter()*'s argument _name_ should be obvious as well. Positional arguments like _name_ can be added as you see fit, just make sure _**request_ is last in your function definition.
+Simple enough? Notice how both calls have access to the _**request_ dictionary, which contains the WSGI environ. Every call you write should declare _**request_ as the last argument. This can be handy to get the client IP, or access multi-part fields sent along with a POST. The *personalized_greeter()*'s argument _name_ should be obvious as well. Positional arguments like _name_ can be added as you see fit, just make sure _**request_ is last in your function definition.
 
 Want some more data about the request and the host? Try changing the name of the controller in the URL from _tests_ to *_debug_tests*. You'll see the environ dumped in the JSON output. This is useful for debugging, but should be disabled in production to avoid giving unnecessary information to clients.
 

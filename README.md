@@ -31,7 +31,7 @@ Built-in debug server
 When invoked from the command line, __rpcfu_main.py__ creates a single threaded debug server that listens on port 8080 by default. This should not be used for production, but is handy for debugging. You can use the _pdb_ python debugging module to create breakpoints within your application, allowing you to debug in real time from the command line. The debug server is only created when invoked from the command line, and will not exist if called via WSGI.
 
 JSON output is fine, but what about inputs?
---------------------------------
+-------------------------------------------
 You may supply all inputs via JSON, and even  mix and match them. The way to do this is to supply a query string variable named *json_args* containing your arguments in JSON form. In the _Quick Start_ above, providing `?name=Developer` is the same as providing `{"name": "Developer"}` within the *json_args* variable. Passing arguments as separate query string variables is available mainly for development/debugging, and seems less-than-elegant for production.
 
 Mapping
@@ -44,4 +44,4 @@ Documentation is (almost) entirely unwritten at this time, but that should be re
 
 Use the source Luke!
 --------------------
-Where documentation may be slim, code comments are not. Code is well commented, and all PEP 8 compliant. Feel free to dive into the (not-so-vast) source code, it's not too terrifying :)
+Where documentation may be slim, code comments are not. Code is commented, docstrings are (mostly) present, and everything is PEP 8 compliant. Feel free to dive into the code, it's not too terrifying :)

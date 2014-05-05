@@ -24,10 +24,10 @@ def application(environ, start_response):
     from cgi import FieldStorage
     start_time = datetime.datetime.now()  # Grab start time early
 
-    #####################################################################
-    ## Set your script_path or imports will fail when deployed via WSGI
+    ##########################################################################
+    ## Set your script_path first or imports will fail when deployed via WSGI
     script_path = "/var/www/wsgi/rpcfu/"
-    #####################################################################
+    ##########################################################################
 
     if script_path not in sys.path:
         sys.path.append(script_path)  # Set path for WSGI
@@ -39,7 +39,7 @@ def application(environ, start_response):
     for arg in fs_http_args:  # copy fieldstorage key:value pairs into http_args
         http_args[arg.name] = arg.value
     for k in environ:  # merge environ with http_args
-        if not k.startswith("wsgi"):
+        if not k.startswith("wsgi"):  # skip the wsgi-prefixed data to keep http_args concise
             http_args[k] = environ[k]
 
     rpc_name = environ['PATH_INFO'].replace('/', '', 1)  # Remove leading slash from url

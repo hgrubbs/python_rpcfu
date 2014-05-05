@@ -22,9 +22,9 @@ You should receive this response from your browser:
 
     {"greeting": "Hello Developer!"}
 
-Simple enough? Notice how both calls have access to the _**request_ dictionary, which contains the WSGI environ. Every call you write should declare _**request_ as the last argument. This can be handy to get the client IP, or access multi-part fields sent along with a POST. The *personalized_greeter()*'s argument _name_ should be obvious as well. Positional arguments like _name_ can be added as you see fit, just make sure _**request_ is last in your function definition.
+Simple enough? Notice how both calls have access to the _**request_ dictionary, which contains the WSGI environ. Every call you write should declare _**request_ as the last argument. This can be handy to get the client IP, or access multi-part fields sent along with a POST. The *personalized_greeter()*'s argument _name_ should be self-explanatory as well. Positional arguments like _name_ can be added as you see fit, just make sure _**request_ is last in your function definition.
 
-Want some more data about the request and the host? Try changing the name of the controller in the URL from _tests_ to *_debug_tests*. You'll see the environ dumped in the JSON output. This is useful for debugging, but should be disabled in production to avoid giving unnecessary information to clients.
+Want some more data about the request and the host? Try changing the name of the controller in the URL from _tests_ to *_debug_tests*. You'll see the environ dumped in the JSON output. This is useful for debugging, but should be disabled in production to avoid giving unnecessary or sensitive information to clients.
 
 Built-in debug server
 ---------------------
@@ -32,7 +32,7 @@ When invoked from the command line, __rpcfu_main.py__ creates a single threaded 
 
 JSON output is fine, but what about inputs?
 --------------------------------
-You may supply all inputs via JSON as well, you can even mix and match them. The way to do this is to supply a query string variable named *json_args* containing your arguments. In the _Quick Start_ above, providing `?name=Developer` is the same as providing `{"name": "Developer"}` within the *json_args* variable. Passing arguments as separate query string variables is available mainly for development/debugging, and seems sloppy to deploy in production.
+You may supply all inputs via JSON, and even  mix and match them. The way to do this is to supply a query string variable named *json_args* containing your arguments in JSON form. In the _Quick Start_ above, providing `?name=Developer` is the same as providing `{"name": "Developer"}` within the *json_args* variable. Passing arguments as separate query string variables is available mainly for development/debugging, and seems less-than-elegant for production.
 
 Mapping
 -------

@@ -11,6 +11,7 @@ class InsufficientArguments(Exception):
 
 
 class RPCMapper(object):
+    """"Mapper to connect URL's with a module's functions"""
 
     # Override __call__ so we can send requests to the appropriate module and function
     def __call__(self, url, **args):
@@ -21,13 +22,12 @@ class RPCMapper(object):
         else:  # catches urls like /foo/bar
             rpcfu_module = url[:url.find("/")]
             rpcfu_function = url[url.find("/") + 1:]
-            pass
 
-        # Calls individual functions from within defined modules
+        # Calls individual functions from within imported modules
         if rpcfu_module == "tests":
             rpcfu_module = tests
         elif rpcfu_module is None:  # Module to receive calls when no module is specified
-            rpcfu_module = status
+            rpcfu_module = tests
 
         try:
             if hasattr(rpcfu_module, rpcfu_function):

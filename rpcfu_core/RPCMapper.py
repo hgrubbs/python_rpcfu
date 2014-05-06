@@ -2,7 +2,12 @@ from rpc_controllers import tests
 
 
 class InsufficientArguments(Exception):
-    """Exception for insufficient arguments passed from web client to RPC"""
+    """Exception for insufficient arguments passed from web client to RPC.
+
+    This exception should be thrown manually - eg a provided dict is missing expected fields. Normal functions that fail
+    because the arguments provided do not meet the defined arguments will raise a TypeError, which is handled below in
+    the RPCMapper class.
+    """
     def __init__(self, value):
         self.value = value
 
@@ -37,5 +42,4 @@ class RPCMapper(object):
         except TypeError as e:
                 return {"error": e.args}
         except InsufficientArguments as e:
-            #This exception should be thrown manually - eg a provided dict is missing expected fields
             return {"error": "insufficient arguments", "missing arguments": e.value}

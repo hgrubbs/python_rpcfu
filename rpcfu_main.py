@@ -90,7 +90,7 @@ def application(environ, start_response):
 
 # Start debug_server if invoked directly, this is NOT run if loaded by WSGI
 if __name__ == "__main__":
-    debug_server_bind = "0.0.0.0"
+    debug_server_bind = "127.0.0.1"
     debug_server_port = 8080
     import sys
     try:

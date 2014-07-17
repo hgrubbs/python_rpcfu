@@ -69,6 +69,8 @@ def application(environ, start_response):
     if '_fatal_error_' not in http_args:
         response_dict = rpc_handler(rpc_name, **http_args)  # Pass RPC name and arguments to handler
     if send_debug is True:
+        if type(response_dict) is not dict:  # Convert non-dict results(eg tuples) to dicts before modifying them
+            response_dict = dict(response_dict)
         response_dict['_debug_http'] = http_args
         response_dict['_debug_rpc'] = {
             "rpc_execution_time": (datetime.datetime.now() - start_time).total_seconds(),

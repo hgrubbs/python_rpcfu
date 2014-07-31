@@ -40,7 +40,7 @@ Mapping is accomplished in __rpcfu_core/RPCMapper.py__. An example mapping is in
 
 Need more documentation?
 ------------------------
-Documentation is (almost) entirely unwritten at this time, but that should be remedied in the near future. If you are interested in helping document the usage of RPCfu, please become a collaborator! Currently, there are a handful of enterprise commercial deployments of RPCfu that extend and take it in wonderful directions. Unfortunately, these deployments are unable to commit their extensions upstream as they contain confidential information about the business. Hopefully these users will sanitize their confidential data and allow these extensions to be shared with the world, but until then feel free to contribute any extensions or improvements you may make.
+Documentation is (almost) entirely unwritten at this time, but that should be remedied in the near future. If you are interested in helping document the usage of RPCfu, please become a collaborator.
 
 Use the source Luke!
 --------------------

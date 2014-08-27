@@ -27,12 +27,12 @@ def application(environ, start_response):
 
     ##########################################################################
     ## Set your script_path first or imports will fail when deployed via WSGI
-    script_path = "/var/www/wsgi/rpcfu/"
+    #script_path = "/var/www/wsgi/rpcfu/"
+    script_path = os.path.dirname(os.path.realpath(__file__))  # new method
     ##########################################################################
 
     if script_path not in sys.path:
-        #sys.path.append(script_path)  # Set path for WSGI
-        script_path = os.path.dirname(os.path.realpath(__file__))  # new method
+        sys.path.append(script_path)  # Set path for WSGI
     from rpcfu_core import RPCMapper  # Import must occur after we append the sys.path if using WSGI
 
     rpc_handler = RPCMapper.RPCMapper()

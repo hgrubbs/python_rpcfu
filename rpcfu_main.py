@@ -22,6 +22,7 @@ def application(environ, start_response):
     import datetime
     import json
     from cgi import FieldStorage
+    import os
     start_time = datetime.datetime.now()  # Grab start time early
 
     ##########################################################################
@@ -30,7 +31,8 @@ def application(environ, start_response):
     ##########################################################################
 
     if script_path not in sys.path:
-        sys.path.append(script_path)  # Set path for WSGI
+        #sys.path.append(script_path)  # Set path for WSGI
+        script_path = os.path.dirname(os.path.realpath(__file__))  # new method
     from rpcfu_core import RPCMapper  # Import must occur after we append the sys.path if using WSGI
 
     rpc_handler = RPCMapper.RPCMapper()

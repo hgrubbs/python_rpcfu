@@ -10,7 +10,7 @@ def render(view_file, view_data=None):
     from jinja2 import Template
     import os
 
-    view_file = "%s/../views/%s" % (os.path.dirname(__file__), view_file)  # Hacky pathfix that works for WSGI and local debugging
+    view_file = "%s/../views/%s" % (os.path.dirname(__file__), view_file)  # Pathfix that works for both WSGI and local debugging
     view = open(view_file).read()
     j2_template = Template(view)
     view = j2_template.render(view_data)

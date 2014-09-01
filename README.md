@@ -5,7 +5,7 @@ RPCfu is a project to create a _very lightweight_ WSGI-compliant RPC framework t
 
 Quick start
 -----------
-Diving in is easy. Within __rpc_controllers/tests.py__, there are two simple functions defined, and we're going to test them out. Their definitions are:
+Diving in is easy. Within __controllers/tests.py__, there are two simple functions defined, and we're going to test them out. Their definitions are:
 
 *  greeter(**request) 
 *  personalized_greeter(name, **request) 
@@ -36,7 +36,7 @@ You may supply all inputs via JSON, and even  mix and match them. The way to do 
 
 Mapping
 -------
-Mapping is accomplished in __rpcfu_core/RPCMapper.py__. An example mapping is included that points to __rpc_controllers/test.py__. The quickest introduction to how RPC calls are mapped is to take a peek inside __RPCMapper.py__ - it's short, concise, and very easy to add to.
+Mapping is accomplished in __models/RPCMapper.py__. An example mapping is included that points to __controllers/test.py__. The quickest introduction to how RPC calls are mapped is to take a peek inside __RPCMapper.py__ - it's short, concise, and very easy to add to.
 
 Need more documentation?
 ------------------------

@@ -1,7 +1,7 @@
 RPCfu - what is it?
 -------------------
 
-RPCfu is a project to create a _very lightweight_ WSGI-compliant RPC framework that speaks JSON. The project is written in Python 3.x, and is the basis for a handful of commercial RPC deployments.
+RPCfu is a project to create a _very lightweight_ WSGI framework. It was originally written to serve as a JSON-speaking RESTful API, but has evolved to support user-facing views rendered by Jinja2.
 
 Quick start
 -----------
@@ -40,7 +40,7 @@ Mapping is accomplished in __models/RPCMapper.py__. An example mapping is includ
 
 Need more documentation?
 ------------------------
-Documentation is (almost) entirely unwritten at this time, but that should be remedied in the near future. If you are interested in helping document the usage of RPCfu, please become a collaborator.
+Documentation is (almost) entirely unwritten at this time, but I hope to remedy that in the future. If you are interested in helping document the usage of RPCfu, please become a collaborator.
 
 Use the source Luke!
 --------------------

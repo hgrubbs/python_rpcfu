@@ -19,21 +19,21 @@
 
 def application(environ, start_response):
     import sys
+    import os
     import datetime
     import json
+    import re
     from cgi import FieldStorage
-    import os
     start_time = datetime.datetime.now()  # Grab start time early
 
     ##########################################################################
-    ## Set your script_path first or imports will fail when deployed via WSGI
-    #script_path = "/var/www/wsgi/rpcfu/"
-    script_path = os.path.dirname(os.path.realpath(__file__))  # new method
+    # Set your script_path first or imports will fail when deployed via WSGI
+    script_path = os.path.dirname(os.path.realpath(__file__))
     ##########################################################################
 
     if script_path not in sys.path:
         sys.path.append(script_path)  # Set path for WSGI
-    from rpcfu_core import RPCMapper  # Import must occur after we append the sys.path if using WSGI
+    from models import RPCMapper  # Import must occur after we append the sys.path if using WSGI
 
     rpc_handler = RPCMapper.RPCMapper()
     fs_http_args = FieldStorage(fp=environ['wsgi.input'], environ=environ, keep_blank_values=True).list  # get GET/POST
@@ -58,6 +58,7 @@ def application(environ, start_response):
         rpc_name = rpc_name.replace("_debug_", "")
         send_debug = True
     else:
+        rpc_name = re.sub(r'^_*', '', rpc_name)  # remove leading underscores to protect built-ins (ie __class__)
         send_debug = False
     if 'json_args' in http_args:  # Merge 'json_args' into http_args if present
         try:
@@ -71,30 +72,37 @@ def application(environ, start_response):
     if '_fatal_error_' not in http_args:
         response_dict = rpc_handler(rpc_name, **http_args)  # Pass RPC name and arguments to handler
     if send_debug is True:
-        if type(response_dict) is not dict:  # Convert non-dict results(eg tuples) to dicts before modifying them
-            response_dict = dict(response_dict)
+        if type(response_dict) is not dict:  # Is response a tuple? If so convert to dict before modifying
+            try:
+                response_dict = dict(response_dict)
+            except Exception as e:  # handle converting a response type that is not sane to dict
+                response_dict = dict(unknown_response=list(response_dict))
         response_dict['_debug_http'] = http_args
         response_dict['_debug_rpc'] = {
             "rpc_execution_time": (datetime.datetime.now() - start_time).total_seconds(),
         }
-
     return_status = '200 OK'
-    if 'content_type' in response_dict and 'raw_content' in response_dict:  # Handle raw(eg binary/image) replies
-        response_headers = [('Content-Type', response_dict['content_type']),
-                            ('Content-Length', str(len(response_dict['raw_content'])))]
-        if 'content_disposition' in response_dict:
-            response_headers.append(('Content-Disposition', response_dict['content_disposition']))
+    if '_content_type' in response_dict and '_raw_content' in response_dict:  # Handle raw(eg binary/image) replies
+        response_headers = [('Content-Type', response_dict['_content_type']),
+                            ('Content-Length', str(len(response_dict['_raw_content'])))]
+        if '_content_disposition' in response_dict:
+            response_headers.append(('Content-Disposition', response_dict['_content_disposition']))
         start_response(return_status, response_headers)
-        return [response_dict['raw_content']]
-    else:
-        response_dict = json.dumps(response_dict)  # encode final response
+        return [response_dict['_raw_content']]
+    elif '_content_type' in response_dict and '_content' in response_dict:  # Handle non-binary, non-json replies
+        response_headers = [('Content-Type', response_dict['_content_type']),
+                            ('Content-Length', str(len(response_dict['_content'])))]
+        start_response(return_status, response_headers)
+        return [response_dict['_content'].encode('utf-8')]
+    else:  # Handle all other replies as json
+        response_dict = json.dumps(response_dict)
         response_headers = [('Content-Type', 'application/json'), ('Content-Length', str(len(response_dict)))]
         start_response(return_status, response_headers)
         return [response_dict.encode('utf-8')]
 
 # Start debug_server if invoked directly, this is NOT run if loaded by WSGI
 if __name__ == "__main__":
-    debug_server_bind = "127.0.0.1"
+    debug_server_bind = "0.0.0.0"
     debug_server_port = 8080
     import sys
     try:

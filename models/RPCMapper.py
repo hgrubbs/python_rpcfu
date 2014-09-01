@@ -1,4 +1,4 @@
-from rpc_controllers import tests
+from controllers import tests
 
 
 class InsufficientArguments(Exception):

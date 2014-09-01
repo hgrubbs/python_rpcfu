@@ -33,6 +33,8 @@ class RPCMapper(object):
             rpcfu_module = tests
         elif rpcfu_module is None:  # Module to receive calls when no module is specified
             rpcfu_module = tests
+            if rpcfu_function == '':  # Handle empty URL's eg http://foo.com/
+                rpcfu_function = 'greeter'
 
         try:
             if hasattr(rpcfu_module, rpcfu_function):

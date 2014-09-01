@@ -1,7 +1,7 @@
 RPCfu - what is it?
 -------------------
 
-RPCfu is a project to create a _very lightweight_ WSGI framework. It was originally written to serve as a JSON-speaking RESTful API, but has evolved to support user-facing views rendered by Jinja2.
+RPCfu is a project to create a _very lightweight_ Python 3x WSGI framework. It was originally written to serve as a JSON-speaking RESTful API, but has evolved to support user-facing views rendered by Jinja2.
 
 Quick start
 -----------

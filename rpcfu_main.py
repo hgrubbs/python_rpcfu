@@ -45,25 +45,13 @@ def application(environ, start_response):
             http_args[k] = environ[k]
 
     rpc_name = environ['PATH_INFO'].replace('/', '', 1)  # Remove leading slash from url
+    rpc_name = re.sub(r'^_*', '', rpc_name)  # remove leading underscores to protect built-ins (ie __class__)
 
-    # Ignore any favicon.ico requests - these are a pest when using the debug server
-    if rpc_name == "favicon.ico":
-        status = '200 OK'
-        msg = "favicon.ico REQUEST IGNORED"
-        response_headers = [('Content-Type', 'application/text'), ('Content-Length', str(len(msg)))]
-        start_response(status, response_headers)
-        return [msg.encode('utf-8')]
-
-    if rpc_name.startswith("_debug_"):
-        rpc_name = rpc_name.replace("_debug_", "")
-        send_debug = True
-    else:
-        rpc_name = re.sub(r'^_*', '', rpc_name)  # remove leading underscores to protect built-ins (ie __class__)
-        send_debug = False
-    if 'json_args' in http_args:  # Merge 'json_args' into http_args if present
+    # Merge 'json_args' into http_args if present
+    if 'json_args' in http_args:
         try:
             decoded_json = json.loads(http_args['json_args'])
-        except ValueError:  # invalid JSON handed to us
+        except ValueError:  # Does the JSON not parse correctly?
             http_args['_fatal_error_'] = "invalid JSON provided in json_args"  # Prevent RPC from being attempted
             response_dict = {"error": "JSON provided in json_args unable to be parsed",
                              "original json_args": http_args['json_args']}
@@ -71,32 +59,36 @@ def application(environ, start_response):
         http_args.update(decoded_json)
     if '_fatal_error_' not in http_args:
         response_dict = rpc_handler(rpc_name, **http_args)  # Pass RPC name and arguments to handler
-    if send_debug is True:
-        if type(response_dict) is not dict:  # Is response a tuple? If so convert to dict before modifying
-            try:
-                response_dict = dict(response_dict)
-            except Exception as e:  # handle converting a response type that is not sane to dict
-                response_dict = dict(unknown_response=list(response_dict))
-        response_dict['_debug_http'] = http_args
-        response_dict['_debug_rpc'] = {
-            "rpc_execution_time": (datetime.datetime.now() - start_time).total_seconds(),
-        }
+
     return_status = '200 OK'
-    if '_content_type' in response_dict and '_raw_content' in response_dict:  # Handle raw(eg binary/image) replies
+
+    # Handle RPC's that return raw data(eg images and other binary data)
+    if '_content_type' in response_dict and '_raw_content' in response_dict:
         response_headers = [('Content-Type', response_dict['_content_type']),
-                            ('Content-Length', str(len(response_dict['_raw_content'])))]
+                            ('Content-Length', str(len(response_dict['_raw_content']))),
+                            ('Access-Control-Allow-Methods', 'POST,GET,PUT'),
+                            ('Access-Control-Allow-Origin', '*')
+                            ]
         if '_content_disposition' in response_dict:
             response_headers.append(('Content-Disposition', response_dict['_content_disposition']))
         start_response(return_status, response_headers)
         return [response_dict['_raw_content']]
-    elif '_content_type' in response_dict and '_content' in response_dict:  # Handle non-binary, non-json replies
+
+    # Handle RPC's that return non-binary, non-json replies (eg a HTML view)
+    elif '_content_type' in response_dict and '_content' in response_dict:
         response_headers = [('Content-Type', response_dict['_content_type']),
                             ('Content-Length', str(len(response_dict['_content'])))]
         start_response(return_status, response_headers)
         return [response_dict['_content'].encode('utf-8')]
-    else:  # Handle all other replies as json
+
+    # Handle all other RPC's as JSON replies
+    else:
         response_dict = json.dumps(response_dict)
-        response_headers = [('Content-Type', 'application/json'), ('Content-Length', str(len(response_dict)))]
+        response_headers = [('Content-Type', 'application/json'),
+                            ('Content-Length', str(len(response_dict))),
+                            ('Access-Control-Allow-Methods', 'POST,GET,PUT'),
+                            ('Access-Control-Allow-Origin', '*')
+                            ]
         start_response(return_status, response_headers)
         return [response_dict.encode('utf-8')]
 

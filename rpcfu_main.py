@@ -38,8 +38,12 @@ def application(environ, start_response):
     rpc_handler = RPCMapper.RPCMapper()
     fs_http_args = FieldStorage(fp=environ['wsgi.input'], environ=environ, keep_blank_values=True).list  # get GET/POST
     http_args = dict()  # dict to hold combination of environ & query-string fields
-    for arg in fs_http_args:  # copy fieldstorage key:value pairs into http_args
-        http_args[arg.name] = arg.value
+
+    # This var must be checked as not being None type. A POST with no data attached will return None from FieldStorage()
+    # However, a GET with no data attached will return an iterable with no values.
+    if fs_http_args is not None:
+        for arg in fs_http_args:  # copy fieldstorage key:value pairs into http_args
+            http_args[arg.name] = arg.value
     for k in environ:  # merge environ with http_args
         if not k.startswith("wsgi"):  # skip the wsgi-prefixed data to keep http_args concise
             http_args[k] = environ[k]

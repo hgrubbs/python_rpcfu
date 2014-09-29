@@ -20,11 +20,9 @@
 def application(environ, start_response):
     import sys
     import os
-    import datetime
     import json
     import re
     from cgi import FieldStorage
-    start_time = datetime.datetime.now()  # Grab start time early
 
     ##########################################################################
     # Set your script_path first or imports will fail when deployed via WSGI

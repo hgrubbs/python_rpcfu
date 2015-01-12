@@ -4,7 +4,9 @@ RPCfu is a project to create a _very lightweight_ Python 3x WSGI framework. It r
 
 ## Why not Django? Flask? Another WSGI framework? ##
 
-Most popular WSGI frameworks obfuscate how a WSGI transaction takes place. They add in ORM's, complex URL routing rules, mandatory decorators, and other such black magic the programmer is asked to take on good faith. RPCfu does none of these things. Everything happens in two files:, __rcpfu_main.py__ and __RPCMapper.py__. The entire process - from the web request arriving to the result being sent back - can be observed  without following  hundreds of lines of boilerplate code included in large frameworks. In short, by working directly with and understanding this process: _you will become a better programmer_. Additionally, RPCfu (for the most part) is a traditional RPC layer, and not another RESTful API. This may or may not be what you are looking for.
+Most popular WSGI frameworks obfuscate how a WSGI transaction takes place. They add in ORM's, complex URL routing rules, mandatory decorators, and other such black magic the programmer is asked to take on good faith. RPCfu does none of these things. Everything happens in two files:, __rcpfu_main.py__ and __RPCMapper.py__. The entire process - from the web request arriving to the result being sent back - can be observed  without following  hundreds of lines of boilerplate code included in large frameworks. In short, by working directly with and understanding this process: _you will become a better programmer_. 
+
+Additionally, RPCfu (for the most part) is a traditional RPC layer, and not another RESTful API. This may or may not be what you are looking for.
 
 ## Quick start ##
 

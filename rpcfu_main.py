@@ -33,7 +33,7 @@ def application(environ, start_response):
         sys.path.append(script_path)  # Set path for WSGI
     from models import RPCMapper  # Import must occur after we append the sys.path if using WSGI
 
-    rpc_handler = RPCMapper.RPCMapper()
+    rpc_handler = RPCMapper.ExplicitMapper()
     fs_http_args = FieldStorage(fp=environ['wsgi.input'], environ=environ, keep_blank_values=True).list  # get GET/POST
     http_args = dict()  # dict to hold combination of environ & query-string fields
 
@@ -46,10 +46,11 @@ def application(environ, start_response):
         if not k.startswith("wsgi"):  # skip the wsgi-prefixed data to keep http_args concise
             http_args[k] = environ[k]
 
-    rpc_name = environ['PATH_INFO'].replace('/', '', 1)  # Remove leading slash from url
-    rpc_name = re.sub(r'^_*', '', rpc_name)  # remove leading underscores to protect built-ins (ie __class__)
+    #rpc_name = environ['PATH_INFO'].replace('/', '', 1)  # Remove leading slash from url
+    rpc_name = environ['PATH_INFO']
+    #rpc_name = re.sub(r'^_*', '', rpc_name)  # remove leading underscores to protect built-ins (ie __class__)
 
-    # Merge 'json_args' into http_args if present
+    # Merge 'json_args' into http_args, if 'json_args' is present
     if 'json_args' in http_args:
         try:
             decoded_json = json.loads(http_args['json_args'])
@@ -57,14 +58,26 @@ def application(environ, start_response):
             http_args['_fatal_error_'] = "invalid JSON provided in json_args"  # Prevent RPC from being attempted
             response_dict = {"error": "JSON provided in json_args unable to be parsed",
                              "original json_args": http_args['json_args']}
-            decoded_json = {}  # empty dict() so it can be update()'d into http_args
+            decoded_json = {}  # empty dict, so it can be update()'d into http_args
         http_args.update(decoded_json)
     if '_fatal_error_' not in http_args:
         response_dict = rpc_handler(rpc_name, **http_args)  # Pass RPC name and arguments to handler
 
-    return_status = '200 OK'
 
-    # Handle RPC's that return raw data(eg images and other binary data)
+    # Check for specified status codes, otherwise '200 OK'
+    if '_status_code' in response_dict:
+        status_code = response_dict['_status_code']
+        del response_dict['_status_code']
+    else:
+        status_code = '200'
+    if '_status_message' in response_dict:
+        status_message = response_dict['_status_message']
+        del response_dict['_status_message']
+    else:
+        status_message = "OK"
+    return_status = "%s %s" % (status_code, status_message)
+
+    # Handle return values that return raw data(eg images and other binary data)
     if '_content_type' in response_dict and '_raw_content' in response_dict:
         response_headers = [('Content-Type', response_dict['_content_type']),
                             ('Content-Length', str(len(response_dict['_raw_content']))),
@@ -76,14 +89,14 @@ def application(environ, start_response):
         start_response(return_status, response_headers)
         return [response_dict['_raw_content']]
 
-    # Handle RPC's that return non-binary, non-json replies (eg a HTML view)
+    # Handle return values that return non-binary, non-json replies (eg a HTML view)
     elif '_content_type' in response_dict and '_content' in response_dict:
         response_headers = [('Content-Type', response_dict['_content_type']),
                             ('Content-Length', str(len(response_dict['_content'])))]
         start_response(return_status, response_headers)
         return [response_dict['_content'].encode('utf-8')]
 
-    # Handle all other RPC's as JSON replies
+    # Handle all other return values as JSON replies
     else:
         response_dict = json.dumps(response_dict)
         response_headers = [('Content-Type', 'application/json'),

@@ -21,7 +21,6 @@ def application(environ, start_response):
     import sys
     import os
     import json
-    import re
     from cgi import FieldStorage
 
     ##########################################################################
@@ -46,9 +45,7 @@ def application(environ, start_response):
         if not k.startswith("wsgi"):  # skip the wsgi-prefixed data to keep http_args concise
             http_args[k] = environ[k]
 
-    #rpc_name = environ['PATH_INFO'].replace('/', '', 1)  # Remove leading slash from url
     rpc_name = environ['PATH_INFO']
-    #rpc_name = re.sub(r'^_*', '', rpc_name)  # remove leading underscores to protect built-ins (ie __class__)
 
     # Merge 'json_args' into http_args, if 'json_args' is present
     if 'json_args' in http_args:

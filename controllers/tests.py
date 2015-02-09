@@ -7,3 +7,7 @@ def greeter(**request):
 
 def personalized_greeter(name, **request):
     return {"greeting": "Hello %s!" % name}
+
+
+def echo(**request):
+    return request

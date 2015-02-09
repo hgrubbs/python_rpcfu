@@ -39,4 +39,4 @@ So far you may have noticed that all the inputs have been supplied in URL querys
 
 ## URL Mapping ##
 
-URL mapping is accomplished in __models/RPCMapper.py__. This is what routes `/tests/greeter` to the file __tests.py__'s function named __greeter(**request)__. An example mapping is included that points to __controllers/tests.py__. The quickest introduction to how RPC calls are mapped is to take a peek inside __RPCMapper.py__ - it's short, concise, and very easy to add to.
+URL mapping is accomplished in __rpcfu_settings.py__ and __models/RPCMapper.py__. This is what routes `/tests/greeter` to the file __tests.py__'s function named __greeter(**request)__. The dictionary `url_map` within __rpcfu_settings.py__ contains the regexp patterns to match URLs. These use the standard python __re__ library, and are analogous to Django's urlpattern.

@@ -16,8 +16,6 @@
 #   limitations under the License.
 #############################################################################
 
-
-
 from controllers import tests as c_tests
 
 url_map = [
@@ -26,40 +24,30 @@ url_map = [
     {'url': r'^/url_greeter/(?P<name>\w+?)/{0,1}$', 'function': c_tests.url_greeter, 'methods': ('GET',)},
 ]
 
-class ExplicitMapper(object):
-
-    def __init__(self, url_map):
-        self.url_map = url_map
-
-    def __call__(self, url, **args):
-        import re
-
-        target_function = None
-
-        for mapping in self.url_map:
-            # If method(s) specified in the mapping, skip any requests not matching method(s)
-            if ('methods' in mapping) and (args['REQUEST_METHOD'] not in mapping['methods']):
-                continue
-
-            m = re.search(mapping['url'], url)
-            if m is not None:
-                args.update(m.groupdict())
-                target_function = mapping['function']
-                break
-
-        if target_function is None:
-            return {"_status_code": 404, "_status_message": "NOT FOUND"}
-
-        try:
-            return target_function(**args)
-        except TypeError as e:
-                return {"error": e.args}
-
 def application(environ, start_response):
     import sys
     import os
     import json
     from cgi import FieldStorage
+
+    def call_rpc_by_url(url_map, url, **args):
+        import re
+        target_function = None
+        for mapping in url_map:
+            # If method(s) specified in the mapping, skip any requests not matching method(s)
+            if ('methods' in mapping) and (args['REQUEST_METHOD'] not in mapping['methods']):
+                continue
+            m = re.search(mapping['url'], url)
+            if m is not None:
+                args.update(m.groupdict())
+                target_function = mapping['function']
+                break
+        if target_function is None:
+            return {"_status_code": 404, "_status_message": "NOT FOUND"}
+        try:
+            return target_function(**args)
+        except TypeError as e:
+                return {"error": e.args}
 
     ##########################################################################
     # Set your script_path first or imports will fail when deployed via WSGI
@@ -69,7 +57,6 @@ def application(environ, start_response):
     if script_path not in sys.path:
         sys.path.append(script_path)  # Set path for WSGI
 
-    rpc_handler = ExplicitMapper(url_map)
     fs_http_args = FieldStorage(fp=environ['wsgi.input'], environ=environ, keep_blank_values=True).list  # get GET/POST
     http_args = dict()  # dict to hold combination of environ & query-string fields
 
@@ -82,8 +69,8 @@ def application(environ, start_response):
         if not k.startswith("wsgi"):  # skip the wsgi-prefixed data to keep http_args concise
             http_args[k] = environ[k]
 
-    rpc_name = environ['PATH_INFO']
-    response_dict = rpc_handler(rpc_name, **http_args)
+    url = environ['PATH_INFO']
+    response_dict = call_rpc_by_url(url_map, url, **http_args)
 
     # Check for specified status codes, otherwise '200 OK'
     if '_status_code' in response_dict:
@@ -113,7 +100,10 @@ def application(environ, start_response):
     # Handle return values that return non-binary, non-json replies (eg a HTML view)
     elif '_content_type' in response_dict and '_content' in response_dict:
         response_headers = [('Content-Type', response_dict['_content_type']),
-                            ('Content-Length', str(len(response_dict['_content'])))]
+                            ('Content-Length', str(len(response_dict['_content']))),
+                            ('Access-Control-Allow-Methods', 'POST,GET,PUT'),
+                            ('Access-Control-Allow-Origin', '*')
+                            ]
         start_response(return_status, response_headers)
         return [response_dict['_content'].encode('utf-8')]
 

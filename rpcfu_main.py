@@ -55,8 +55,6 @@ class ExplicitMapper(object):
         except TypeError as e:
                 return {"error": e.args}
 
-
-
 def application(environ, start_response):
     import sys
     import os

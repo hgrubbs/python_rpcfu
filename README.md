@@ -35,4 +35,4 @@ When invoked from the command line, __rpcfu_main.py__ creates a single threaded 
 
 ## URL Mapping ##
 
-URL mapping is accomplished in __url_map__, at the top of __rpcfu_main.py__. This is what routes `/tests/greeter` to the file __tests.py__'s function named __greeter(**request)__. The dictionary `url_map` contains the regexp patterns to match URLs, which use the standard regular expression syntax. These may be familiar if you are used to writing __urls.py__ files for Django.
+URL mapping is accomplished in the list `url_map`, at the top of __rpcfu_main.py__. This is what routes `/tests/greeter` to the file __tests.py__'s function named __greeter(**request)__. The dictionary `url_map` contains the regexp patterns to match URLs, which use the standard regular expression syntax. These may be familiar if you are used to writing __urls.py__ files for Django.

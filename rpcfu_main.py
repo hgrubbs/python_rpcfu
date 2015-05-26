@@ -17,6 +17,46 @@
 #############################################################################
 
 
+
+from controllers import tests as c_tests
+
+url_map = [
+    {'url': r'^/greeter/{0,1}$', 'function': c_tests.greeter, 'methods': ('GET',)},
+    {'url': r'^/personalized_greeter/{0,1}$', 'function': c_tests.personalized_greeter, 'methods': ('GET',)},
+    {'url': r'^/url_greeter/(?P<name>\w+?)/{0,1}$', 'function': c_tests.url_greeter, 'methods': ('GET',)},
+]
+
+class ExplicitMapper(object):
+
+    def __init__(self, url_map):
+        self.url_map = url_map
+
+    def __call__(self, url, **args):
+        import re
+
+        target_function = None
+
+        for mapping in self.url_map:
+            # If method(s) specified in the mapping, skip any requests not matching method(s)
+            if ('methods' in mapping) and (args['REQUEST_METHOD'] not in mapping['methods']):
+                continue
+
+            m = re.search(mapping['url'], url)
+            if m is not None:
+                args.update(m.groupdict())
+                target_function = mapping['function']
+                break
+
+        if target_function is None:
+            return {"_status_code": 404, "_status_message": "NOT FOUND"}
+
+        try:
+            return target_function(**args)
+        except TypeError as e:
+                return {"error": e.args}
+
+
+
 def application(environ, start_response):
     import sys
     import os
@@ -30,9 +70,8 @@ def application(environ, start_response):
 
     if script_path not in sys.path:
         sys.path.append(script_path)  # Set path for WSGI
-    from models import RPCMapper  # Import must occur after we append the sys.path if using WSGI
 
-    rpc_handler = RPCMapper.ExplicitMapper()
+    rpc_handler = ExplicitMapper(url_map)
     fs_http_args = FieldStorage(fp=environ['wsgi.input'], environ=environ, keep_blank_values=True).list  # get GET/POST
     http_args = dict()  # dict to hold combination of environ & query-string fields
 
@@ -46,20 +85,7 @@ def application(environ, start_response):
             http_args[k] = environ[k]
 
     rpc_name = environ['PATH_INFO']
-
-    # Merge 'json_args' into http_args, if 'json_args' is present
-    if 'json_args' in http_args:
-        try:
-            decoded_json = json.loads(http_args['json_args'])
-        except ValueError:  # Does the JSON not parse correctly?
-            http_args['_fatal_error_'] = "invalid JSON provided in json_args"  # Prevent RPC from being attempted
-            response_dict = {"error": "JSON provided in json_args unable to be parsed",
-                             "original json_args": http_args['json_args']}
-            decoded_json = {}  # empty dict, so it can be update()'d into http_args
-        http_args.update(decoded_json)
-    if '_fatal_error_' not in http_args:
-        response_dict = rpc_handler(rpc_name, **http_args)  # Pass RPC name and arguments to handler
-
+    response_dict = rpc_handler(rpc_name, **http_args)
 
     # Check for specified status codes, otherwise '200 OK'
     if '_status_code' in response_dict:
@@ -78,7 +104,7 @@ def application(environ, start_response):
     if '_content_type' in response_dict and '_raw_content' in response_dict:
         response_headers = [('Content-Type', response_dict['_content_type']),
                             ('Content-Length', str(len(response_dict['_raw_content']))),
-                            ('Access-Control-Allow-Methods', 'POST,GET,PUT'),
+                            ('Access-Control-Allow-Methods', 'POST,GET,PUT', 'DELETE'),
                             ('Access-Control-Allow-Origin', '*')
                             ]
         if '_content_disposition' in response_dict:

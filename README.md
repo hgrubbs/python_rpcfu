@@ -4,13 +4,13 @@ RPCfu is a project to create a _very lightweight_ Python 3x WSGI framework. It r
 
 ## Why not Django? Flask? Another WSGI framework? ##
 
-Most popular WSGI frameworks obfuscate how a WSGI transaction takes place. They add in ORM's, complex URL routing rules, mandatory decorators, and other such black magic the programmer is asked to take on good faith. RPCfu does none of these things. Everything happens in two files:, __rcpfu_main.py__ and __RPCMapper.py__. The entire process - from the web request arriving to the result being sent back - can be observed  without following  hundreds of lines of boilerplate code included in large frameworks. In short, by working directly with and understanding this process: _you will become a better programmer_. 
+Most popular WSGI frameworks obfuscate how a WSGI transaction takes place. They add in ORM's, complex URL routing rules, mandatory decorators, and other such black magic the programmer is asked to take on good faith. RPCfu does none of these things. Everything happens in one file:, __rcpfu_main.py__. While not very python, this is meant to demonstrate the components necessary for WSGI. Feel free to re-arrange them to suite your project. The entire process - from the web request arriving to the result being sent back - can be observed  without following  hundreds of lines of boilerplate code included in large frameworks. In short, by working directly with and understanding this process: _you will become a better programmer_. 
 
-Additionally, RPCfu (for the most part) is a traditional RPC layer, and not another RESTful API. This may or may not be what you are looking for.
+Additionally, RPCfu (for the most part) is a traditional RPC layer, and not another RESTful framework. This *may or may not* be what you are looking for.
 
 ## Quick start ##
 
-Diving in is easy. Within __controllers/tests.py__, there are two simple functions defined, and we're going to test them out. Their definitions are:
+Diving in is easy. Within __controllers/tests.py__, there are a few simple functions defined, and we're going to test them out. Their definitions are:
 
 *  greeter(**request) 
 *  personalized_greeter(name, **request) 
@@ -33,10 +33,6 @@ Simple enough? Notice how both calls have access to the _**request_ dictionary, 
 
 When invoked from the command line, __rpcfu_main.py__ creates a single threaded debug server that listens on port 8080 by default. This should not be used for production, but is handy for debugging. You can use the _pdb_ or _pudb_ python debugging module(and any others you may prefer) to create breakpoints within your application, allowing you to debug in real time from the command line. The debug server is only created when invoked from the command line, and will not exist if called via WSGI.
 
-## JSON inputs? ##
-
-So far you may have noticed that all the inputs have been supplied in URL querystrings, eg `/foo/bar?variable=value`. This is fine, and is also very common. However, if you want to supply everything via JSON, you can. The way to do this is to supply a query string variable named *json_args* containing your arguments in JSON form. In the _Quick Start_ above, providing `?name=Developer` is the same as providing `{"name": "Developer"}` within the *json_args* variable. A URL containing that example in JSON form would appear like `/tests/greeter?json_args=<URL encoded JSON>`. You can pass _both_ query string and json_args provided variables, however values provided in json_args will clobber any query string variables with the same name.
-
 ## URL Mapping ##
 
-URL mapping is accomplished in __rpcfu_settings.py__ and __models/RPCMapper.py__. This is what routes `/tests/greeter` to the file __tests.py__'s function named __greeter(**request)__. The dictionary `url_map` within __rpcfu_settings.py__ contains the regexp patterns to match URLs. These use the standard python __re__ library, and are analogous to Django's urlpattern.
+URL mapping is accomplished in __url_map__, at the top of __rpcfu_main.py__. This is what routes `/tests/greeter` to the file __tests.py__'s function named __greeter(**request)__. The dictionary `url_map` contains the regexp patterns to match URLs, which use the standard regular expression syntax. These may be familiar if you are used to writing __urls.py__ files for Django.

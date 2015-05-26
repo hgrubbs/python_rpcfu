@@ -2,8 +2,9 @@
 
 
 def render(view_file, view_data=None):
-    """Renders a Jinja2 template from view_file and view_data.
-    view_file is assumed to be a path relative to midas/views/
+    """
+    Render a Jinja2 template from view_file and view_data.
+    view_file is assumed to be a path relative to views/
 
     The output is a complete view encapsulated within  dict(_content_type='text/html', _content=<rendered_view>)
     """

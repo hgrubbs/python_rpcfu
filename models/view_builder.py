@@ -1,7 +1,7 @@
 # Renders jinja2 templated views and returns the proper _content_type and _content for RCPFU to output them
 
 
-def render(view_file, view_data=None):
+def render(view_file, view_data={}):
     """
     Render a Jinja2 template from view_file and view_data.
     view_file is assumed to be a path relative to views/

@@ -63,8 +63,7 @@ def application(environ, start_response):
     # This var must be checked as not being None type. A POST with no data attached will return None from FieldStorage()
     # However, a GET with no data attached will return an iterable with no values.
     if fs_http_args is not None:
-        for arg in fs_http_args:  # copy fieldstorage key:value pairs into http_args
-            http_args[arg.name] = arg.value
+        http_args['fieldstorage'] = fs_http_args
     for k in environ:  # merge environ with http_args
         if not k.startswith("wsgi"):  # skip the wsgi-prefixed data to keep http_args concise
             http_args[k] = environ[k]
@@ -89,7 +88,7 @@ def application(environ, start_response):
     if '_content_type' in response_dict and '_raw_content' in response_dict:
         response_headers = [('Content-Type', response_dict['_content_type']),
                             ('Content-Length', str(len(response_dict['_raw_content']))),
-                            ('Access-Control-Allow-Methods', 'POST,GET,PUT', 'DELETE'),
+                            ('Access-Control-Allow-Methods', 'POST,GET,PUT'),
                             ('Access-Control-Allow-Origin', '*')
                             ]
         if '_content_disposition' in response_dict:
